@@ -1,0 +1,100 @@
+{
+  "name": "vscode",
+  "displayName": "RiktigRefactor",
+  "description": "Behavior-preserving refactorings that refuse when they cannot prove a change is safe.",
+  "version": "0.0.1",
+  "publisher": "riktigrefactor",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RiktigRefactor/RiktigRefactor.VSCode"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:csharp",
+    "onLanguage:cpp",
+    "onLanguage:c"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "riktigrefactor.rename",
+        "title": "Riktig Rename",
+        "category": "RiktigRefactor"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "riktigrefactor.rename",
+        "key": "f2",
+        "when": "config.riktigrefactor.rename.overrideF2 && editorTextFocus && !editorReadonly && (editorLangId == csharp || editorLangId == cpp || editorLangId == c)"
+      }
+    ],
+    "menus": {
+      "editorContext": [
+        {
+          "command": "riktigrefactor.rename",
+          "when": "editorLangId == csharp || editorLangId == cpp || editorLangId == c",
+          "group": "1_modification"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "RiktigRefactor",
+      "properties": {
+        "riktigrefactor.csharp.command": {
+          "type": "string",
+          "default": "riktig-cs",
+          "description": "The riktig-cs tool (install with: dotnet tool install --global RiktigRefactor.CSharp.Tool)."
+        },
+        "riktigrefactor.csharp.workspace": {
+          "type": "string",
+          "default": "",
+          "description": "The .sln, .slnx or .csproj to load, relative to the workspace folder. Empty means find one in the workspace folder."
+        },
+        "riktigrefactor.cpp.command": {
+          "type": "string",
+          "default": "riktig-cpp",
+          "description": "The riktig-cpp tool."
+        },
+        "riktigrefactor.cpp.workspace": {
+          "type": "string",
+          "default": "",
+          "description": "The compile_commands.json to load, relative to the workspace folder. Empty means look in the workspace folder and its build folder."
+        },
+        "riktigrefactor.rename.overrideF2": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use Riktig Rename instead of the built-in rename on F2 in C# and C++ files."
+        },
+        "riktigrefactor.previewBeforeApplying": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show VS Code's refactor preview, with warnings, before applying a refactoring."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc -p . && esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js --sourcemap",
+    "test": "tsc -p . && node --test \"out/test/**/*.test.js\"",
+    "package": "npm run build && vsce package"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.90.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.0"
+  }
+}

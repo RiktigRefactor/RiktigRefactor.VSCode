@@ -1,0 +1,10 @@
+[tools]
+node = "22"
+
+[tasks.build-and-test]
+description = "Install dependencies, build, and test"
+run = [
+  "npm ci",
+  "npm run build",
+  "npm test",
+]
