@@ -4,5 +4,3 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 mise exec -- bash -c 'npm ci --no-audit --no-fund && npx prettier --write "src/**/*.ts" "test/**/*.ts"'
-
-mise run mdsnippets
