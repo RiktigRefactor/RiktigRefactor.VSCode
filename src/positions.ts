@@ -11,18 +11,28 @@ export interface LspPosition {
 }
 
 /** Converts an LSP position, given the text of its line, to a protocol position. */
-export function toProtocolPosition(lineText: string, position: LspPosition): ProtocolPosition {
-  const scalarsBefore = Array.from(lineText.slice(0, position.character)).length;
+export function toProtocolPosition(
+  lineText: string,
+  position: LspPosition,
+): ProtocolPosition {
+  const scalarsBefore = Array.from(
+    lineText.slice(0, position.character),
+  ).length;
   return { line: position.line + 1, column: scalarsBefore + 1 };
 }
 
 /** Converts a protocol position to an LSP position, given the text of its line. Throws when the column is past the end of the line. */
-export function toLspPosition(lineText: string, position: ProtocolPosition): LspPosition {
+export function toLspPosition(
+  lineText: string,
+  position: ProtocolPosition,
+): LspPosition {
   let character = 0;
   let scalars = 1;
   while (scalars < position.column) {
     if (character >= lineText.length) {
-      throw new RangeError(`Column ${position.column} is past the end of line ${position.line}.`);
+      throw new RangeError(
+        `Column ${position.column} is past the end of line ${position.line}.`,
+      );
     }
     const codePoint = lineText.codePointAt(character)!;
     character += codePoint > 0xffff ? 2 : 1;

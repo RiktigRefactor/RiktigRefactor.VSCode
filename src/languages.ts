@@ -11,20 +11,22 @@ export interface LanguageTool {
 
 export const languageTools: LanguageTool[] = [
   {
-    id: 'csharp',
-    displayName: 'RiktigRefactor C#',
-    languageIds: ['csharp'],
-    commandSetting: 'riktigrefactor.csharp.command',
-    workspaceSetting: 'riktigrefactor.csharp.workspace',
-    installHint: 'Install it with: dotnet tool install --global RiktigRefactor.CSharp.Tool',
+    id: "csharp",
+    displayName: "RiktigRefactor C#",
+    languageIds: ["csharp"],
+    commandSetting: "riktigrefactor.csharp.command",
+    workspaceSetting: "riktigrefactor.csharp.workspace",
+    installHint:
+      "Install it with: dotnet tool install --global RiktigRefactor.CSharp.Tool",
   },
   {
-    id: 'cpp',
-    displayName: 'RiktigRefactor C++',
-    languageIds: ['cpp', 'c'],
-    commandSetting: 'riktigrefactor.cpp.command',
-    workspaceSetting: 'riktigrefactor.cpp.workspace',
-    installHint: 'Build riktig-cpp from the RiktigRefactor.CPP repository and set riktigrefactor.cpp.command to its path.',
+    id: "cpp",
+    displayName: "RiktigRefactor C++",
+    languageIds: ["cpp", "c"],
+    commandSetting: "riktigrefactor.cpp.command",
+    workspaceSetting: "riktigrefactor.cpp.workspace",
+    installHint:
+      "Build riktig-cpp from the RiktigRefactor.CPP repository and set riktigrefactor.cpp.command to its path.",
   },
 ];
 
