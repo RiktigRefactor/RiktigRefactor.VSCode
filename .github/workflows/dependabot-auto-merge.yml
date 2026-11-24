@@ -1,0 +1,44 @@
+name: Dependabot auto-merge
+
+# Merges a Dependabot pull request once every check on it has passed.
+# Runs after each CI workflow finishes, so the last one to pass triggers the merge.
+on:
+  workflow_run:
+    workflows:
+      - "Build and Test"
+      - "Check links"
+      - "Tidy Code"
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]' &&
+      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
+    runs-on: ubuntu-slim
+    steps:
+      - name: Merge if every check passed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          pr=$(gh pr list --head "$BRANCH" --author 'app/dependabot' --state open --json number,headRefOid \
+            --jq ".[] | select(.headRefOid == \"$HEAD_SHA\") | .number")
+          if [ -z "$pr" ]; then
+            echo "No open Dependabot pull request at $HEAD_SHA."
+            exit 0
+          fi
+          unfinished_or_failed=$(gh pr view "$pr" --json statusCheckRollup --jq \
+            '[.statusCheckRollup[] | select(.workflowName != "Dependabot auto-merge") | select((.conclusion // .state) as $c | ($c != "SUCCESS" and $c != "SKIPPED" and $c != "NEUTRAL"))] | length')
+          if [ "$unfinished_or_failed" != "0" ]; then
+            echo "$unfinished_or_failed check(s) not passed yet; a later run will merge."
+            exit 0
+          fi
+          gh pr merge "$pr" --merge --match-head-commit "$HEAD_SHA"

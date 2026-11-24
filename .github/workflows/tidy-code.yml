@@ -1,0 +1,27 @@
+name: Tidy Code
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  tidy-code:
+    runs-on: ubuntu-slim
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78 # v5.3.0
+      - run: ./tidy-code
+      - name: Check for changes
+        id: git-status
+        run: echo "changed=$(git status --porcelain | wc -l)" >> "$GITHUB_OUTPUT"
+      - name: Git Commit and Push
+        if: steps.git-status.outputs.changed != '0'
+        run: |
+          git config user.name "Github Actions"
+          git config user.email actions@github.com
+          git add -A
+          git commit -m ". a Tidy code and update markdown snippets"
+          git pull --rebase
+          git push
