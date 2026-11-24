@@ -1,5 +1,10 @@
-import * as path from 'node:path';
-import { lineOf, toLspPosition, ProtocolPosition, LspPosition } from './positions';
+import * as path from "node:path";
+import {
+  lineOf,
+  toLspPosition,
+  ProtocolPosition,
+  LspPosition,
+} from "./positions";
 
 export interface ProtocolRange {
   file: string;
@@ -28,7 +33,7 @@ export interface ProtocolRefusalReason {
 }
 
 export interface ProtocolResult {
-  status: 'success' | 'refused' | string;
+  status: "success" | "refused" | string;
   workspaceRoot: string;
   edits?: ProtocolEdit[];
   warnings?: ProtocolWarning[];
@@ -45,13 +50,16 @@ export interface LspEdit {
 
 /** Joins a result's workspace-relative `/` path with the workspace root. */
 export function absolutePathOf(workspaceRoot: string, file: string): string {
-  return path.resolve(workspaceRoot, ...file.split('/'));
+  return path.resolve(workspaceRoot, ...file.split("/"));
 }
 
 /**
  * Converts a result's edits to LSP edits. Reads each file once, through readFile, to turn scalar-value columns into UTF-16 offsets.
  */
-export function toLspEdits(result: ProtocolResult, readFile: (absolutePath: string) => string): LspEdit[] {
+export function toLspEdits(
+  result: ProtocolResult,
+  readFile: (absolutePath: string) => string,
+): LspEdit[] {
   const texts = new Map<string, string>();
   const textOf = (file: string): string => {
     let text = texts.get(file);
@@ -78,13 +86,15 @@ export function toLspEdits(result: ProtocolResult, readFile: (absolutePath: stri
 export function describeRefusal(result: ProtocolResult): string {
   const reasons = result.reasons ?? [];
   if (reasons.length === 0) {
-    return 'The refactoring was refused, and the tool gave no reason.';
+    return "The refactoring was refused, and the tool gave no reason.";
   }
   return reasons
     .map((reason) => {
-      const where = reason.location ? ` (${reason.location.file}:${reason.location.start.line}:${reason.location.start.column})` : '';
-      const suggestion = reason.suggestion ? ` ${reason.suggestion}` : '';
+      const where = reason.location
+        ? ` (${reason.location.file}:${reason.location.start.line}:${reason.location.start.column})`
+        : "";
+      const suggestion = reason.suggestion ? ` ${reason.suggestion}` : "";
       return `Refused (${reason.code}): ${reason.message}${where}${suggestion}`;
     })
-    .join('\n');
+    .join("\n");
 }
