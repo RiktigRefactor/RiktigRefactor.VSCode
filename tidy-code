@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+mise exec -- bash -c 'npm ci --no-audit --no-fund && npx prettier --write "src/**/*.ts" "tests/**/*.ts"'
+
+mise run mdsnippets

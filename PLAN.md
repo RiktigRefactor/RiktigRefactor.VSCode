@@ -1,6 +1,6 @@
 # Plan: RiktigRefactor VS Code extension
 
-Source: [RiktigRefactor.Spec](../RiktigRefactor.Spec) (`interfaces.md`, `protocol.md`, `principles.md`, `limitations.md`, `process.md`, `test-format.md`).
+Source: [RiktigRefactor.Spec](https://github.com/RiktigRefactor/RiktigRefactor.Spec) (`interfaces.md`, `protocol.md`, `principles.md`, `limitations.md`, `process.md`, `test-format.md`).
 
 ## Decisions
 
