@@ -1,6 +1,7 @@
 # RiktigRefactor.VSCode
 
-![Status: early](https://img.shields.io/badge/status-early-orange)
+[![Build and test](https://github.com/RiktigRefactor/RiktigRefactor.VSCode/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/RiktigRefactor/RiktigRefactor.VSCode/actions/workflows/build-and-test.yml)
+![Status: early development](https://img.shields.io/badge/status-early%20development-orange)
 
 A VS Code extension exposing RiktigRefactor refactorings in the editor.
 *Riktig* means "correct" in Swedish/Norwegian.
